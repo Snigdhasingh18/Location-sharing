@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Share Your Starry Coordinates</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fdf6f0;
+      color: #4b3f2f;
+      text-align: center;
+      padding: 50px;
+    }
+    button {
+      background-color: #e0b7a4;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 30px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌍 Share Your Starry Coordinates</h1>
+  <p>Let the winds whisper your place to me—only if your heart agrees.</p>
+  <button onclick="getLocation()">Share My Location</button>
+  <div id="output"></div>
+
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        document.getElementById("output").innerHTML = "Your browser doesn't support location sharing.";
+      }
+    }
+
+    function showPosition(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+        .then(response => response.json())
+        .then(data => {
+          const location = data.display_name;
+          document.getElementById("output").innerHTML = `
+            <p>📍 You are near: <strong>${location}</strong></p>
+            <p>Latitude: ${lat}<br>Longitude: ${lon}</p>
+          `;
+          sendToMe(lat, lon, location);
+        });
+    }
+
+    function sendToMe(lat, lon, location) {
+      fetch("https://your-backend-url.com/location", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ latitude: lat, longitude: lon, place: location })
+      });
+    }
+
+    function showError(error) {
+      document.getElementById("output").innerHTML = "Location sharing was declined or failed.";
+    }
+  </script>
+</body>
+</html>
