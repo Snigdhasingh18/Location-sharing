@@ -2,14 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Share Your Starry Coordinates</title>
+  <title>Whispers of Your Sky</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Quicksand&display=swap" rel="stylesheet">
   <style>
+    @keyframes float {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+.petal {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: url('https://i.imgur.com/0Z8F0zK.png') no-repeat center;
+  background-size: contain;
+  animation: float 6s infinite ease-in;
+}
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #fdf6f0;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to bottom, #fdf6f0, #e8dcd0);
       color: #4b3f2f;
       text-align: center;
-      padding: 50px;
+      padding: 60px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 18px;
+      margin-bottom: 30px;
     }
     button {
       background-color: #e0b7a4;
@@ -18,17 +41,32 @@
       font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #d49c85;
     }
     #output {
-      margin-top: 30px;
+      margin-top: 40px;
       font-size: 18px;
     }
   </style>
 </head>
 <body>
-  <h1>🌍 Share Your Starry Coordinates</h1>
-  <p>Let the winds whisper your place to me—only if your heart agrees.</p>
-  <button onclick="getLocation()">Share My Location</button>
+  <h1> Whispers of Your Sky</h1>
+  <p>Let the winds carry your coordinates to me—only if your heart agrees.</p>
+  <div id="petal-container"></div>
+<script>
+  for (let i = 0; i < 15; i++) {
+    let petal = document.createElement("div");
+    petal.className = "petal";
+    petal.style.left = Math.random() * window.innerWidth + "px";
+    petal.style.top = Math.random() * window.innerHeight + "px";
+    petal.style.animationDuration = (4 + Math.random() * 4) + "s";
+    document.getElementById("petal-container").appendChild(petal);
+  }
+</script>
+  <button onclick="getLocation()">Share My Moment</button>
   <div id="output"></div>
 
   <script>
@@ -41,23 +79,27 @@
     }
 
     function showPosition(position) {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
 
-      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
-        .then(response => response.json())
-        .then(data => {
-          const location = data.display_name;
-          document.getElementById("output").innerHTML = `
-            <p>📍 You are near: <strong>${location}</strong></p>
-            <p>Latitude: ${lat}<br>Longitude: ${lon}</p>
-          `;
-          sendToMe(lat, lon, location);
-        });
-    }
+  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+    .then(response => response.json())
+    .then(data => {
+      const location = data.display_name;
+      document.getElementById("output").innerHTML = `
+        <p>📍 You are near: <strong>${location}</strong></p>
+        <p>Latitude: ${lat}<br>Longitude: ${lon}</p>
+        <p style="margin-top:30px; font-style:italic; color:#7a5c4f;">
+          A breeze from your skies just reached me.<br>
+          Stay tuned—something poetic is on its way 🌸
+        </p>
+      `;
+      sendToMe(lat, lon, location);
+    });
+}
 
     function sendToMe(lat, lon, location) {
-      fetch("https://your-backend-url.com/location", {
+      fetch("https://script.google.com/macros/s/AKfycbxSpqX_sP351r-93hJTYbBE4l5k1UqwpMi-BwKDStNzUW1-bU0sA2IoYlQSfGDm2Oup/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ latitude: lat, longitude: lon, place: location })
