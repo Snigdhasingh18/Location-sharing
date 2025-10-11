@@ -99,7 +99,7 @@
 }
 
     function sendToMe(lat, lon, location) {
-      fetch("https://script.google.com/macros/s/AKfycbxSpqX_sP351r-93hJTYbBE4l5k1UqwpMi-BwKDStNzUW1-bU0sA2IoYlQSfGDm2Oup/exec", {
+      fetch("https://script.google.com/macros/s/AKfycby37GE9rxonBM7NoTDJ-2uGIYM_q8c92F6vvANOMPGUppd1v5RhS_aINEieKwkykuM5/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ latitude: lat, longitude: lon, place: location })
@@ -112,6 +112,7 @@
   </script>
 </body>
 </html>
+
 
 
 
